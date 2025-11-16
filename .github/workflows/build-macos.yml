@@ -53,19 +53,3 @@ jobs:
         name: Cin7-Smartsheet-Uploader-v5.0-macOS
         path: Cin7-Smartsheet-Uploader-v5.0-macOS.zip
         retention-days: 90
-```
-
-5. **Scroll down y en "Commit message" escribe:**
-```
-   Add GitHub Actions workflow for macOS build
-```
-
-6. **Click "Commit changes"**
-
----
-
-### **OPCIÓN B: Si prefieres crear localmente**
-
-1. **En tu carpeta local del proyecto:**
-```
-   cin7-v5/
