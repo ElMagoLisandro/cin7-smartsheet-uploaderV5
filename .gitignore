@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store
+*.dmg
+
+# Logs
+*.log
+Cin7UploaderLogs/
+
+# Config
+cin7_uploader_config.json
+
+# Build artifacts
+*.spec
