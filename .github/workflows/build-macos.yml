@@ -26,48 +26,33 @@ jobs:
     
     - name: Build macOS app with PyInstaller
       run: |
-        pyinstaller --name "Cin7SmartsheetUploader-v5.0" \
+        pyinstaller --name "Cin7SmartsheetUploader" \
           --windowed \
           --onefile \
-          --add-data "README.md:." \
           --hidden-import pandas \
           --hidden-import openpyxl \
           --hidden-import smartsheet \
           --hidden-import tkinter \
           --hidden-import tkinter.scrolledtext \
           --hidden-import tkinter.ttk \
-          --hidden-import queue \
-          --hidden-import threading \
           --collect-all smartsheet \
           --collect-all openpyxl \
           --collect-all pandas \
           cin7_smartsheet_uploader_v5.py
     
-    - name: Verify build
+    - name: Create App Bundle
       run: |
-        if [ -f "dist/Cin7SmartsheetUploader-v5.0" ]; then
-          echo "✅ Build successful"
-          ls -lah dist/
-          file dist/Cin7SmartsheetUploader-v5.0
-        else
-          echo "❌ Build failed"
-          exit 1
-        fi
-    
-    - name: Fix permissions and create app bundle
-      run: |
-        chmod +x dist/Cin7SmartsheetUploader-v5.0
         mkdir -p "dist/Cin7 Smartsheet Uploader.app/Contents/MacOS"
-        mv dist/Cin7SmartsheetUploader-v5.0 "dist/Cin7 Smartsheet Uploader.app/Contents/MacOS/"
+        mkdir -p "dist/Cin7 Smartsheet Uploader.app/Contents/Resources"
+        mv dist/Cin7SmartsheetUploader "dist/Cin7 Smartsheet Uploader.app/Contents/MacOS/"
         
-        # Create Info.plist
         cat > "dist/Cin7 Smartsheet Uploader.app/Contents/Info.plist" << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
         <dict>
             <key>CFBundleExecutable</key>
-            <string>Cin7SmartsheetUploader-v5.0</string>
+            <string>Cin7SmartsheetUploader</string>
             <key>CFBundleName</key>
             <string>Cin7 Smartsheet Uploader</string>
             <key>CFBundleDisplayName</key>
@@ -78,28 +63,26 @@ jobs:
             <string>5.0.0</string>
             <key>CFBundleShortVersionString</key>
             <string>5.0.0</string>
-            <key>CFBundleInfoDictionaryVersion</key>
-            <string>6.0</string>
             <key>CFBundlePackageType</key>
             <string>APPL</string>
             <key>NSHighResolutionCapable</key>
             <true/>
-            <key>LSMinimumSystemVersion</key>
-            <string>10.14</string>
         </dict>
         </plist>
         EOF
         
         chmod -R 755 "dist/Cin7 Smartsheet Uploader.app"
     
-    - name: Create ZIP
+    - name: Create DMG
       run: |
-        cd dist
-        zip -r -y "../Cin7-Smartsheet-Uploader-v5.0-macOS.zip" "Cin7 Smartsheet Uploader.app"
+        hdiutil create -volname "Cin7 Uploader v5.0" \
+          -srcfolder "dist/Cin7 Smartsheet Uploader.app" \
+          -ov -format UDZO \
+          "Cin7-Smartsheet-Uploader-v5.0.dmg"
     
-    - name: Upload artifact
+    - name: Upload DMG
       uses: actions/upload-artifact@v4
       with:
-        name: Cin7-Smartsheet-Uploader-v5.0-macOS
-        path: Cin7-Smartsheet-Uploader-v5.0-macOS.zip
+        name: Cin7-Smartsheet-Uploader-v5.0-DMG
+        path: Cin7-Smartsheet-Uploader-v5.0.dmg
         retention-days: 90
